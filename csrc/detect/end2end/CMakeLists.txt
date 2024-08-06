@@ -27,7 +27,13 @@ print_var(OpenCV_LIBRARIES)
 print_var(OpenCV_INCLUDE_DIRS)
 
 # TensorRT
+set(TensorRT_DIR /usr/local/TensorRT/)
+set(TensorRT_LIBRARY /usr/local/TensorRT/lib/libnvinfer.so)
+set(TensorRT_PLUGIN_LIBRARY /usr/local/TensorRT/lib/libnvinfer_plugin.so)
+set(TensorRT_INCLUDE_DIR /usr/local/TensorRT/include)
+set(TensorRT_LIB_DIR /usr/local/TensorRT/lib/)
 find_package(TensorRT REQUIRED)
+set(TensorRT_LIBRARIES ${TensorRT_LIBRARY} ${TensorRT_PLUGIN_LIBRARY})
 print_var(TensorRT_LIBRARIES)
 print_var(TensorRT_INCLUDE_DIRS)
 print_var(TensorRT_LIB_DIR)
@@ -57,7 +63,6 @@ list(APPEND ALL_LIB_DIRS
 print_var(ALL_INCLUDE_DIRS)
 print_var(ALL_LIBS)
 print_var(ALL_LIB_DIRS)
-
 
 add_executable(
         ${PROJECT_NAME}

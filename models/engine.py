@@ -31,18 +31,24 @@ class EngineBuilder:
         self.device = device
 
     def __build_engine(self,
-                       fp16: bool = True,
-                       input_shape: Union[List, Tuple] = (1, 3, 640, 640),
-                       iou_thres: float = 0.65,
-                       conf_thres: float = 0.25,
-                       topk: int = 100,
-                       with_profiling: bool = True) -> None:
+                    fp16: bool = True,
+                    input_shape: Union[List, Tuple] = (1, 3, 640, 640),
+                    iou_thres: float = 0.65,
+                    conf_thres: float = 0.25,
+                    topk: int = 100,
+                    with_profiling: bool = True) -> None:
         logger = trt.Logger(trt.Logger.WARNING)
         trt.init_libnvinfer_plugins(logger, namespace='')
         builder = trt.Builder(logger)
         config = builder.create_builder_config()
-        config.max_workspace_size = torch.cuda.get_device_properties(
-            self.device).total_memory
+
+        # For TensorRT 7.0 and later versions
+        if hasattr(config, 'set_memory_pool_limit'):
+            config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, torch.cuda.get_device_properties(self.device).total_memory)
+        # For TensorRT versions prior to 7.0
+        else:
+            builder.set_max_workspace_size(torch.cuda.get_device_properties(self.device).total_memory)
+
         flag = (1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH))
         network = builder.create_network(flag)
 
@@ -59,8 +65,12 @@ class EngineBuilder:
 
         if with_profiling:
             config.profiling_verbosity = trt.ProfilingVerbosity.DETAILED
-        with self.builder.build_engine(self.network, config) as engine:
-            self.weight.write_bytes(engine.serialize())
+
+        # Build the engine using build_serialized_network
+        serialized_engine = self.builder.build_serialized_network(self.network, config)
+        with open(self.weight, 'wb') as f:
+            f.write(serialized_engine)
+
         self.logger.log(
             trt.Logger.WARNING, f'Build tensorrt engine finish.\n'
             f'Save in {str(self.weight.absolute())}')
@@ -225,25 +235,30 @@ class TRTModule(torch.nn.Module):
             model = runtime.deserialize_cuda_engine(self.weight.read_bytes())
 
         context = model.create_execution_context()
-        num_bindings = model.num_bindings
-        names = [model.get_binding_name(i) for i in range(num_bindings)]
+        num_bindings = model.num_io_tensors
+        print(dir(model))
+        names = [model.get_tensor_name(i) for i in range(num_bindings)]
 
         self.bindings: List[int] = [0] * num_bindings
         num_inputs, num_outputs = 0, 0
+        input_names, output_names = [], []
 
         for i in range(num_bindings):
-            if model.binding_is_input(i):
+            name = model.get_tensor_name(i)
+            if model.get_tensor_mode(name) == trt.TensorIOMode.INPUT:
                 num_inputs += 1
+                input_names.append(name)
             else:
                 num_outputs += 1
+                output_names.append(name)
 
         self.num_bindings = num_bindings
         self.num_inputs = num_inputs
         self.num_outputs = num_outputs
         self.model = model
         self.context = context
-        self.input_names = names[:num_inputs]
-        self.output_names = names[num_inputs:]
+        self.input_names = input_names
+        self.output_names = output_names
         self.idx = list(range(self.num_outputs))
 
     def __init_bindings(self) -> None:

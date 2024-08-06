@@ -59,7 +59,7 @@ Besides, other scripts won't work.
 You can export your onnx model by `ultralytics` API and add postprocess such as bbox decoder and `NMS` into ONNX model at the same time.
 
 ``` shell
-python3 export-det.py \
+python export-det.py \
 --weights yolov8s.pt \
 --iou-thres 0.65 \
 --conf-thres 0.25 \
@@ -91,7 +91,7 @@ You can export TensorRT engine from ONNX by [`build.py` ](build.py).
 Usage:
 
 ``` shell
-python3 build.py \
+python build.py \
 --weights yolov8s.onnx \
 --iou-thres 0.65 \
 --conf-thres 0.25 \
