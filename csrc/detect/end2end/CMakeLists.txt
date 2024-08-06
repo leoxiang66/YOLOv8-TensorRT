@@ -28,10 +28,11 @@ print_var(OpenCV_INCLUDE_DIRS)
 
 # TensorRT
 set(TensorRT_DIR /usr/local/TensorRT/)
-set(TensorRT_LIBRARY /usr/local/TensorRT/lib/libnvinfer.so)
-set(TensorRT_PLUGIN_LIBRARY /usr/local/TensorRT/lib/libnvinfer_plugin.so)
-set(TensorRT_INCLUDE_DIR /usr/local/TensorRT/include)
-set(TensorRT_LIB_DIR /usr/local/TensorRT/lib/)
+set(TensorRT_LIB_DIR ${TensorRT_DIR}/lib/)
+set(TensorRT_INCLUDE_DIR ${TensorRT_DIR}/include)
+set(TensorRT_LIBRARY ${TensorRT_LIB_DIR}/libnvinfer.so)
+set(TensorRT_PLUGIN_LIBRARY ${TensorRT_LIB_DIR}/libnvinfer_plugin.so)
+
 find_package(TensorRT REQUIRED)
 set(TensorRT_LIBRARIES ${TensorRT_LIBRARY} ${TensorRT_PLUGIN_LIBRARY})
 print_var(TensorRT_LIBRARIES)
