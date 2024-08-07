@@ -125,7 +125,15 @@ OpenCV is installed: Version 4.5.4
 All checks completed.
 ```
 
+## 1. build
+```shell
+./cpp_builder.run
+```
 
+## 2. infer
+```shell
+./cpp_infer.run
+```
 
 
 
