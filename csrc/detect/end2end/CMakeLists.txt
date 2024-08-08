@@ -65,27 +65,58 @@ print_var(ALL_INCLUDE_DIRS)
 print_var(ALL_LIBS)
 print_var(ALL_LIB_DIRS)
 
+# Executable for main.cpp
 add_executable(
-        ${PROJECT_NAME}
+        yolov8_main1
         ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/yolov8.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/common.hpp
 )
 
+set_target_properties(yolov8_main1 PROPERTIES SUFFIX ".out")
+
 target_include_directories(
-        ${PROJECT_NAME}
+        yolov8_main1
         PUBLIC
         ${ALL_INCLUDE_DIRS}
 )
 
 target_link_directories(
-        ${PROJECT_NAME}
+        yolov8_main1
         PUBLIC
         ${ALL_LIB_DIRS}
 )
 
 target_link_libraries(
-        ${PROJECT_NAME}
+        yolov8_main1
+        PRIVATE
+        ${ALL_LIBS}
+)
+
+# Executable for main2.cpp
+add_executable(
+        yolov8_main2
+        ${CMAKE_CURRENT_SOURCE_DIR}/main_textoutput.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/yolov8.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/common.hpp
+)
+
+set_target_properties(yolov8_main2 PROPERTIES SUFFIX ".out")
+
+target_include_directories(
+        yolov8_main2
+        PUBLIC
+        ${ALL_INCLUDE_DIRS}
+)
+
+target_link_directories(
+        yolov8_main2
+        PUBLIC
+        ${ALL_LIB_DIRS}
+)
+
+target_link_libraries(
+        yolov8_main2
         PRIVATE
         ${ALL_LIBS}
 )
