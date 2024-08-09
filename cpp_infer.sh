@@ -3,10 +3,10 @@ cd csrc/detect/end2end
 mkdir -p build && cd build
 cmake ..
 make
-# mv yolov8 ${root}
-# cd ${root}
+mv *.out ${root}
+cd ${root}
 
 
-# infer image
-# ./yolov8 yolov8s.engine data/bus.jpg
+./yolov8_main1.out yolov8s.engine data/bus.jpg
+./yolov8_main2.out yolov8s.engine data/bus.jpg
  
