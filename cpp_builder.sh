@@ -7,6 +7,7 @@ read pip_path
 
 # Install python environments
 echo "安装python环境 ..."
+cat ./requirements.txt
 $pip_path install -r requirements.txt
 
 echo ""
@@ -27,6 +28,13 @@ echo ""
 echo ""
 
 echo "转为enginefile ..."
-/usr/local/TensorRT/bin/trtexec --onnx=yolov8s.onnx --saveEngine=yolov8s.engine --fp16
+# /usr/local/TensorRT/bin/trtexec --onnx=yolov8s.onnx --saveEngine=yolov8s.engine --fp16
+$python_path build.py \
+--weights yolov8s.onnx \
+--iou-thres 0.65 \
+--conf-thres 0.25 \
+--topk 100 \
+--fp16  \
+--device cuda:0
 echo ""
 echo ""
