@@ -5,6 +5,9 @@ opencv-python==4.10.0.84
 torch==2.4.0
 torchvision==0.19.0
 ultralytics==8.2.73
-tensorrt==10.2.0
+tensorrt==10.1.0 
+tensorrt-cu12==10.1.0 
+tensorrt-cu12-bindings==10.1.0 
+tensorrt-cu12-libs==10.1.0
 # cuda-python
 # pycuda
