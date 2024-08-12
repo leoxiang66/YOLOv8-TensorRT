@@ -9,4 +9,5 @@ cd ${root}
 
 ./yolov8_main1.out yolov8s.engine data/bus.jpg
 ./yolov8_main2.out yolov8s.engine data/bus.jpg
+./yolov8_main3.out yolov8s.engine data/bus.jpg
  

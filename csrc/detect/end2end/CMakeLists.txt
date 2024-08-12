@@ -120,3 +120,32 @@ target_link_libraries(
         PRIVATE
         ${ALL_LIBS}
 )
+
+
+# Executable for main_time.cpp
+add_executable(
+        yolov8_main3
+        ${CMAKE_CURRENT_SOURCE_DIR}/main_time.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/yolov8.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/common.hpp
+)
+
+set_target_properties(yolov8_main3 PROPERTIES SUFFIX ".out")
+
+target_include_directories(
+        yolov8_main3
+        PUBLIC
+        ${ALL_INCLUDE_DIRS}
+)
+
+target_link_directories(
+        yolov8_main3
+        PUBLIC
+        ${ALL_LIB_DIRS}
+)
+
+target_link_libraries(
+        yolov8_main3
+        PRIVATE
+        ${ALL_LIBS}
+)
